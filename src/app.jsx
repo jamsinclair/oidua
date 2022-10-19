@@ -93,7 +93,7 @@ export function App() {
       <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed}>yalP</button>
       <label>
         <span className="playback-rate">{playbackRate}x</span>
-        <input value={playbackRate} onChange={(event) => setPlaybackRate(event.target.value)} type="range" min="0.1" max="1" step="0.1" className="audio-button" disabled={!sampleData} />
+        <input value={playbackRate} onChange={(event) => setPlaybackRate(event.target.value)} type="range" min="0.5" max="1" step="0.1" className="audio-button" disabled={!sampleData} />
       </label>
     </>
   )
