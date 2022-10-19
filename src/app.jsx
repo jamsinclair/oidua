@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'preact/hooks'
 import './app.css'
+import { recordService } from './record-service';
 
 let audioContext = null;
 
@@ -7,16 +8,6 @@ const initAudioContext = () => {
   if (!audioContext) {
     audioContext = new AudioContext();
   }
-}
-
-const getMediaRecorder = () => {
-  const constraints = { audio: true }
-
-  return new Promise((resolve, reject) => {
-    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-      resolve(new MediaRecorder(stream))
-    }, reject)
-  })
 }
 
 const getAudioSamples = (audio) => {
@@ -32,7 +23,7 @@ const getAudioSamples = (audio) => {
   });
 }
 
-const playSamples = ({ samples, sampleRate }, reverse = false) => {
+const playSamples = ({ samples, sampleRate }, playbackRate = 1, reverse = false) => {
     initAudioContext();
     audioContext.resume();
     let audioBuffer = audioContext.createBuffer(1, samples.length, sampleRate);
@@ -44,48 +35,37 @@ const playSamples = ({ samples, sampleRate }, reverse = false) => {
     let source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
+    source.playbackRate.value = playbackRate;
     source.start();
 }
 
 function RecordButton ({ onRecordStopped }) {
-  const [isRecordQueued, setIsRecordQueued] = useState(false);
+  const [isRecordingQueued, setIsRecordingQueued] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState(null);
   const label = isRecording ? 'Stop Recording' : 'Record';
-  const onClick = () => setIsRecordQueued((isRecordQueued) => !isRecordQueued);
+  const onClick = () => { setIsRecordingQueued(!isRecordingQueued) }
   
   useEffect(() => {
-    const startRecording = async () => {
-      setIsRecording(true);
-      const mediaRecorder = await getMediaRecorder();
-      setMediaRecorder(mediaRecorder);
-      let chunks = [];
-      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-      mediaRecorder.onstop = () => {
-        console.log('recording stopped');
-        onRecordStopped(chunks);
-        setIsRecording(false);
-        setMediaRecorder(null);
-        chunks = null;
-      }
-      mediaRecorder.start();
-      console.log("recorder started");
+    if (isRecordingQueued && !isRecording) {
+      recordService.start().then(() => setIsRecording(true));
+      return;
     }
 
-    if (isRecordQueued && !isRecording && !mediaRecorder) {
-      startRecording();
+    if (!isRecordingQueued && isRecording) {
+      recordService.stop().then((data) => {
+        onRecordStopped(data);
+        setIsRecording(false)
+      });
+      return
     }
+  }, [isRecording, isRecordingQueued]);
 
-    if (!isRecordQueued && mediaRecorder) {
-      mediaRecorder.stop();
-    }
-  }, [isRecording, isRecordQueued]);
-
-  return <button className="audio-button" disabled={!isRecordQueued && isRecording} onClick={onClick}>{label}</button>
+  return <button className="audio-button" disabled={isRecordingQueued && !isRecording || isRecording && !isRecordingQueued} onClick={onClick}>{label}</button>
 }
 
 export function App() {
   const [sampleData, setSampleData] = useState(null);
+  const [playbackRate, setPlaybackRate] = useState(1);
   const onRecordStopped = async (chunks) => {
     const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
     setSampleData(await getAudioSamples(blob));
@@ -95,14 +75,14 @@ export function App() {
     if (!sampleData) {
       return;
     }
-    playSamples(sampleData);
+    playSamples(sampleData, playbackRate);
   }
 
   const onPlayReversed = () => {
     if (!sampleData) {
       return;
     }
-    playSamples(sampleData, true);
+    playSamples(sampleData, playbackRate, true);
   }
 
   return (
@@ -111,6 +91,10 @@ export function App() {
       <RecordButton onRecordStopped={onRecordStopped} />
       <button className="audio-button" disabled={!sampleData} onClick={onPlay}>Play</button>
       <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed}>yalP</button>
+      <label>
+        <span className="playback-rate">{playbackRate}x</span>
+        <input value={playbackRate} onChange={(event) => setPlaybackRate(event.target.value)} type="range" min="0.1" max="1" step="0.1" className="audio-button" disabled={!sampleData} />
+      </label>
     </>
   )
 }
