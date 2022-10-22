@@ -10,27 +10,31 @@ const initAudioContext = () => {
   }
 }
 
-const getAudioSamples = (audio) => {
+const getAudioSamples = async (audio) => {
   initAudioContext();
-  return new Promise(async (resolve, reject) => {
     const buffer = await audio.arrayBuffer();
-    audioContext.decodeAudioData(buffer, function(buff) {
-      resolve({
-        sampleRate: buff.sampleRate,
-        samples: buff.getChannelData(0)
-      })
-    });
-  });
+    const decoded = await audioContext.decodeAudioData(buffer);
+    return {
+      sampleRate: decoded.sampleRate,
+      samples: decoded.getChannelData(0)
+    };
+}
+
+const trimSilence = (samples, threshold = 1e-7) => {
+  const firstAbove = samples.findIndex(value => value > threshold);
+  const lastAbove = samples.findLastIndex(value => value > threshold);
+  return samples.subarray(firstAbove > -1 ? firstAbove : 0, lastAbove > -1 ? lastAbove : undefined);
 }
 
 const playSamples = ({ samples, sampleRate }, playbackRate = 1, reverse = false) => {
     initAudioContext();
     audioContext.resume();
-    let audioBuffer = audioContext.createBuffer(1, samples.length, sampleRate);
+    const trimmedSamples = trimSilence(samples);
+    let audioBuffer = audioContext.createBuffer(1, trimmedSamples.length, sampleRate);
     let audio = audioBuffer.getChannelData(0);
-    for (let i = 0; i < samples.length; i++) {
-      const index = reverse ? samples.length - i - 1 : i;
-      audio[i] = samples[index];
+    for (let i = 0; i < trimmedSamples.length; i++) {
+      const index = reverse ? trimmedSamples.length - i - 1 : i;
+      audio[i] = trimmedSamples[index];
     }
     let source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
