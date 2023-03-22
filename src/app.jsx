@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'preact/hooks'
 import './app.css'
 import { recordService } from './record-service';
+import { getTimeStretchedSamples } from './stretch';
 
 let audioContext = null;
 
@@ -26,20 +27,28 @@ const trimSilence = (samples, threshold = 1e-7) => {
   return samples.subarray(firstAbove > -1 ? firstAbove : 0, lastAbove > -1 ? lastAbove : undefined);
 }
 
-const playSamples = ({ samples, sampleRate }, playbackRate = 1, reverse = false) => {
+const playSamples = (sampleData, playbackRate = 1, reverse = false, updateSamplesCache) => {
     initAudioContext();
     audioContext.resume();
-    const trimmedSamples = trimSilence(samples);
-    let audioBuffer = audioContext.createBuffer(1, trimmedSamples.length, sampleRate);
+    const sampleRate = sampleData.sampleRate;
+    let currentSamples = sampleData[String(playbackRate)];
+    if (!currentSamples) {
+      const originalSamples = sampleData['1'];
+      currentSamples = getTimeStretchedSamples(originalSamples, playbackRate, 1, sampleRate);
+      updateSamplesCache({
+        ...sampleData,
+        [String(playbackRate)]: currentSamples
+      })
+    }
+    let audioBuffer = audioContext.createBuffer(1, currentSamples.length, sampleRate);
     let audio = audioBuffer.getChannelData(0);
-    for (let i = 0; i < trimmedSamples.length; i++) {
-      const index = reverse ? trimmedSamples.length - i - 1 : i;
-      audio[i] = trimmedSamples[index];
+    for (let i = 0; i < currentSamples.length; i++) {
+      const index = reverse ? currentSamples.length - i - 1 : i;
+      audio[i] = currentSamples[index];
     }
     let source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
-    source.playbackRate.value = playbackRate;
     source.start();
 }
 
@@ -72,21 +81,22 @@ export function App() {
   const [playbackRate, setPlaybackRate] = useState(1);
   const onRecordStopped = async (chunks) => {
     const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
-    setSampleData(await getAudioSamples(blob));
+    const { sampleRate, samples } = await getAudioSamples(blob);
+    setSampleData({ '1': trimSilence(samples), sampleRate });
   };
 
   const onPlay = () => {
     if (!sampleData) {
       return;
     }
-    playSamples(sampleData, playbackRate);
+    playSamples(sampleData, playbackRate, false, setSampleData);
   }
 
   const onPlayReversed = () => {
     if (!sampleData) {
       return;
     }
-    playSamples(sampleData, playbackRate, true);
+    playSamples(sampleData, playbackRate, true, setSampleData);
   }
 
   return (

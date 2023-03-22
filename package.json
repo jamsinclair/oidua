@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "preact": "^10.10.6"
+    "preact": "^10.10.6",
+    "kali": "git+ssh://git@github.com:infinity/kali.git#0.0.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.3.0",
