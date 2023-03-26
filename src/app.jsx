@@ -101,14 +101,25 @@ export function App() {
 
   return (
     <>
-      <h1>Oidua</h1>
-      <RecordButton onRecordStopped={onRecordStopped} />
-      <button className="audio-button" disabled={!sampleData} onClick={onPlay}>Play</button>
-      <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed}>yalP</button>
-      <label>
-        <span className="playback-rate">{playbackRate}x</span>
-        <input value={playbackRate} onChange={(event) => setPlaybackRate(event.target.value)} type="range" min="0.5" max="1" step="0.1" className="audio-button" disabled={!sampleData} />
-      </label>
+      <header>
+        <h1>Oidua</h1>
+        <p>Record, reverse and replay audio</p>
+      </header>
+      <main>
+        <RecordButton onRecordStopped={onRecordStopped} />
+        <button className="audio-button" disabled={!sampleData} onClick={onPlay}>Play</button>
+        <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed}>yalP</button>
+        <label>
+          <span className="playback-rate">Playback Speed {playbackRate}x</span>
+          <input value={playbackRate} onChange={(event) => setPlaybackRate(event.target.value)} type="range" min="0.5" max="1" step="0.1" className="audio-button" disabled={!sampleData} />
+        </label>
+      </main>
+      <footer>
+        <p>
+          Created by <a href="https://github.com/jamsinclair">jamsinclair</a><br />
+          Source code hosted on <a href="https://github.com/jamsinclair/oidua">GitHub</a>
+        </p>
+      </footer>
     </>
   )
 }
