@@ -103,7 +103,8 @@ export function App() {
     <>
       <header>
         <h1>Oidua</h1>
-        <p>Record, reverse and replay audio</p>
+        <p>Record your voice, sounds or anything and reverse the playback easily.</p>
+        <p>All audio recorded on this page is private and secure and does not leave your device.</p>
       </header>
       <main>
         <RecordButton onRecordStopped={onRecordStopped} />
