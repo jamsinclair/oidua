@@ -1,0 +1,30 @@
+{
+    "en": {
+        "description1": "Record your voice, sounds or any audio and reverse the playback easily.",
+        "privacyNote": "All audio recorded on this page is private and secure and does not leave your device.",
+        "recordButtonLabel": "Record",
+        "recordButtonAriaLabel": "Start recording audio",
+        "recordStopButtonLabel": "Stop Recording",
+        "recordStopButtonAriaLabel": "Stop recording audio",
+        "playButtonLabel": "Play",
+        "playButtonAriaLabel": "Playback recorded audio",
+        "playReverseButtonLabel": "ylaP",
+        "playReverseButtonAriaLabel": "Playback recorded audio in reverse",
+        "playbackSpeedLabel": "Playback Speed",
+        "playbackSpeedControlLabel": "Playback speed control"
+    },
+    "ja": {
+        "description1": "音声やサウンド、任意のオーディオを録音し、簡単に逆再生します。",
+        "privacyNote": "このページで録音されたすべての音声はプライベートで安全です。デバイスを離れることはありません。",
+        "recordButtonLabel": "録音",
+        "recordButtonAriaLabel": "音声の録音を開始",
+        "recordStopButtonLabel": "録音停止",
+        "recordStopButtonAriaLabel": "音声の録音を停止",
+        "playButtonLabel": "再生",
+        "playButtonAriaLabel": "録音された音声を再生",
+        "playReverseButtonLabel": "逆再生",
+        "playReverseButtonAriaLabel": "録音された音声を逆再生",
+        "playbackSpeedLabel": "再生速度",
+        "playbackSpeedControlLabel": "再生速度の調整"
+    }
+}

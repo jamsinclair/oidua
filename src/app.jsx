@@ -2,7 +2,10 @@ import { useState, useEffect } from 'preact/hooks'
 import './app.css'
 import { recordService } from './record-service';
 import { getTimeStretchedSamples } from './stretch';
+import strings from './strings.json';
 
+const language = window.location.pathname.startsWith('/ja') ? 'ja' : 'en';
+const localeStrings = strings[language];
 let audioContext = null;
 
 const initAudioContext = () => {
@@ -55,7 +58,8 @@ const playSamples = (sampleData, playbackRate = 1, reverse = false, updateSample
 function RecordButton ({ onRecordStopped }) {
   const [isRecordingQueued, setIsRecordingQueued] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const label = isRecording ? 'Stop Recording' : 'Record';
+  const label = isRecording ? localeStrings.recordStopButtonLabel : localeStrings.recordButtonLabel;
+  const ariaLabel = isRecording ? localeStrings.recordStopButtonAriaLabel : localeStrings.recordButtonAriaLabel;
   const onClick = () => { setIsRecordingQueued(!isRecordingQueued) }
   
   useEffect(() => {
@@ -73,7 +77,7 @@ function RecordButton ({ onRecordStopped }) {
     }
   }, [isRecording, isRecordingQueued]);
 
-  return <button className="audio-button" disabled={isRecordingQueued && !isRecording || isRecording && !isRecordingQueued} onClick={onClick}>{label}</button>
+  return <button className="audio-button" aria-label={ariaLabel} disabled={isRecordingQueued && !isRecording || isRecording && !isRecordingQueued} onClick={onClick}>{label}</button>
 }
 
 export function App() {
@@ -103,15 +107,15 @@ export function App() {
     <>
       <header>
         <h1>Oidua</h1>
-        <p>Record your voice, sounds or any audio and reverse the playback easily.</p>
-        <p>All audio recorded on this page is private and secure and does not leave your device.</p>
+        <p>{localeStrings.description1}</p>
+        <p>{localeStrings.privacyNote}</p>
       </header>
       <main>
         <RecordButton onRecordStopped={onRecordStopped} />
-        <button className="audio-button" disabled={!sampleData} onClick={onPlay} aria-label="Playback recorded audio">Play</button>
-        <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed} aria-label="Playback recorded audio in reverse">yalP</button>
+        <button className="audio-button" disabled={!sampleData} onClick={onPlay} aria-label={localeStrings.playButtonAriaLabel}>{localeStrings.playButtonLabel}</button>
+        <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed} aria-label={localeStrings.playReverseButtonAriaLabel}>{localeStrings.playReverseButtonLabel}</button>
         <label>
-          <span className="playback-rate">Playback Speed {playbackRate}x</span>
+          <span className="playback-rate">{localeStrings.playbackSpeedLabel} {playbackRate}x</span>
           <input
             id="playbackRate"
             value={playbackRate}
@@ -122,7 +126,7 @@ export function App() {
             step="0.1"
             className="audio-button"
             disabled={!sampleData}
-            aria-label="Playback speed control"
+            aria-label={localeStrings.playbackSpeedControlLabel}
             aria-valuemin="0.5"
             aria-valuemax="1.5"
             aria-valuenow={playbackRate}
@@ -130,10 +134,16 @@ export function App() {
         </label>
       </main>
       <footer>
+        { language === 'en' ?
         <p>
+          Other languages? <a href="/ja/">日本語</a><br />
           Created by <a href="https://github.com/jamsinclair">jamsinclair</a><br />
           Source code hosted on <a href="https://github.com/jamsinclair/oidua">GitHub</a>
-        </p>
+        </p> : <p>
+          Other languages? <a href="/">English</a><br />
+          作成者: <a href="https://github.com/jamsinclair">jamsinclair</a><br />
+          ソースコードは<a href="https://github.com/jamsinclair/oidua">GitHub</a>にホストされています
+        </p> }
       </footer>
     </>
   )
