@@ -4,12 +4,28 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/src/assets/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Oidua - Record and Play Audio in Reverse</title>
-    <meta name="description" content="Oidua (Audio backwards) is a free online tool to help you record, reverse and replay audio right from your browser. Record your own voice and play it backwards." />
+    <title>Oidua - Reverse Audio Playback | Private Voice Recorder</title>
+    <meta name="description" content="Record your voice, sounds, or any audio and reverse playback easily with Oidua. All recordings are private and secure, staying on your device." />
     <meta name="robots" content="index,follow">
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Oidua",
+        "description": "Reverse audio playback tool. Record voice or sounds, reverse them, and ensure all data remains private.",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web",
+        "url": "https://oidua.vercel.app",
+        "inLanguage": "en",
+        "author": {
+          "@type": "Person",
+          "name": "Jamie Sinclair"
+        }
+      }
+    </script>
   </body>
 </html>

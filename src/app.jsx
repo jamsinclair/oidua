@@ -103,16 +103,30 @@ export function App() {
     <>
       <header>
         <h1>Oidua</h1>
-        <p>Record your voice, sounds or anything and reverse the playback easily.</p>
+        <p>Record your voice, sounds or any audio and reverse the playback easily.</p>
         <p>All audio recorded on this page is private and secure and does not leave your device.</p>
       </header>
       <main>
         <RecordButton onRecordStopped={onRecordStopped} />
-        <button className="audio-button" disabled={!sampleData} onClick={onPlay}>Play</button>
-        <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed}>yalP</button>
+        <button className="audio-button" disabled={!sampleData} onClick={onPlay} aria-label="Playback recorded audio">Play</button>
+        <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed} aria-label="Playback recorded audio in reverse">yalP</button>
         <label>
           <span className="playback-rate">Playback Speed {playbackRate}x</span>
-          <input value={playbackRate} onChange={(event) => setPlaybackRate(event.target.value)} type="range" min="0.5" max="1" step="0.1" className="audio-button" disabled={!sampleData} />
+          <input
+            id="playbackRate"
+            value={playbackRate}
+            onChange={(event) => setPlaybackRate(event.target.value)}
+            type="range"
+            min="0.5"
+            max="1.5"
+            step="0.1"
+            className="audio-button"
+            disabled={!sampleData}
+            aria-label="Playback speed control"
+            aria-valuemin="0.5"
+            aria-valuemax="1.5"
+            aria-valuenow={playbackRate}
+          />
         </label>
       </main>
       <footer>
