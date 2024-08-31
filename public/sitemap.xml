@@ -2,13 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://oidua.vercel.app/</loc>
-    <lastmod>2024-08-30</lastmod>
+    <lastmod>2024-08-31</lastmod>
     <priority>1.0</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://oidua.vercel.app/ja/</loc>
-    <lastmod>2024-08-30</lastmod>
+    <lastmod>2024-08-31</lastmod>
+    <priority>1.0</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://oidua.vercel.app/ko/</loc>
+    <lastmod>2024-08-31</lastmod>
+    <priority>1.0</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://oidua.vercel.app/zh/</loc>
+    <lastmod>2024-08-31</lastmod>
     <priority>1.0</priority>
     <changefreq>monthly</changefreq>
   </url>
