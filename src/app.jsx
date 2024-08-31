@@ -4,7 +4,8 @@ import { recordService } from './record-service';
 import { getTimeStretchedSamples } from './stretch';
 import strings from './strings.json';
 
-const language = window.location.pathname.startsWith('/ja') ? 'ja' : 'en';
+const language = document.documentElement.lang || 'en';
+
 const localeStrings = strings[language];
 let audioContext = null;
 
@@ -80,6 +81,34 @@ function RecordButton ({ onRecordStopped }) {
   return <button className="audio-button" aria-label={ariaLabel} disabled={isRecordingQueued && !isRecording || isRecording && !isRecordingQueued} onClick={onClick}>{label}</button>
 }
 
+function Footer () {
+  if (language === 'ja') {
+    return <footer>
+      <p>Other languages? <a href="/">English</a>, <a href="/zh/">中文</a>, <a href="/ko/">한국어</a></p>
+      <p>作成者: <a href="https://github.com/jamsinclair">jamsinclair</a></p>
+      <p>ソースコードは<a href="https://github.com/jamsinclair/oidua">GitHub</a>にホストされています</p>
+    </footer>
+  } else if (language === 'ko') {
+    return <footer>
+      <p>다른 언어? <a href="/">English</a>, <a href="/zh/">중국어</a>, <a href="/ja/">일본어</a></p>
+      <p>만든 사람: <a href="https://github.com/jamsinclair">jamsinclair</a></p>
+      <p>소스 코드: <a href="https://github.com/jamsinclair/oidua">GitHub</a>에서 호스팅</p>
+    </footer>
+  }  else if (language === 'zh') {
+    <footer>
+        <p>其他语言？<a href="/">English</a>, <a href="/ja/">日文</a>, <a href="/ko/">韩文</a></p>
+        <p>创建者：<a href="https://github.com/jamsinclair">jamsinclair</a></p>
+        <p>源代码托管在 <a href="https://github.com/jamsinclair/oidua">GitHub</a></p>
+    </footer>
+  }
+
+  return <footer>
+    <p>Other languages? <a href="/zh/">中文</a>, <a href="/ja/">日本語</a>, <a href="/ko/">한국어</a></p>
+    <p>Created by <a href="https://github.com/jamsinclair">jamsinclair</a></p>
+    <p>Source code hosted on <a href="https://github.com/jamsinclair/oidua">GitHub</a></p>
+  </footer>
+}
+
 export function App() {
   const [sampleData, setSampleData] = useState(null);
   const [playbackRate, setPlaybackRate] = useState(1);
@@ -133,18 +162,7 @@ export function App() {
           />
         </label>
       </main>
-      <footer>
-        { language === 'en' ?
-        <p>
-          Other languages? <a href="/ja/">日本語</a><br />
-          Created by <a href="https://github.com/jamsinclair">jamsinclair</a><br />
-          Source code hosted on <a href="https://github.com/jamsinclair/oidua">GitHub</a>
-        </p> : <p>
-          Other languages? <a href="/">English</a><br />
-          作成者: <a href="https://github.com/jamsinclair">jamsinclair</a><br />
-          ソースコードは<a href="https://github.com/jamsinclair/oidua">GitHub</a>にホストされています
-        </p> }
-      </footer>
+      <Footer />
     </>
   )
 }

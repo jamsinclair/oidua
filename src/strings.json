@@ -1,30 +1,58 @@
 {
-    "en": {
-        "description1": "Record your voice, sounds or any audio and reverse the playback easily.",
-        "privacyNote": "All audio recorded on this page is private and secure and does not leave your device.",
-        "recordButtonLabel": "Record",
-        "recordButtonAriaLabel": "Start recording audio",
-        "recordStopButtonLabel": "Stop Recording",
-        "recordStopButtonAriaLabel": "Stop recording audio",
-        "playButtonLabel": "Play",
-        "playButtonAriaLabel": "Playback recorded audio",
-        "playReverseButtonLabel": "ylaP",
-        "playReverseButtonAriaLabel": "Playback recorded audio in reverse",
-        "playbackSpeedLabel": "Playback Speed",
-        "playbackSpeedControlLabel": "Playback speed control"
-    },
-    "ja": {
-        "description1": "音声やサウンド、任意のオーディオを録音し、簡単に逆再生します。",
-        "privacyNote": "このページで録音されたすべての音声はプライベートで安全です。デバイスを離れることはありません。",
-        "recordButtonLabel": "録音",
-        "recordButtonAriaLabel": "音声の録音を開始",
-        "recordStopButtonLabel": "録音停止",
-        "recordStopButtonAriaLabel": "音声の録音を停止",
-        "playButtonLabel": "再生",
-        "playButtonAriaLabel": "録音された音声を再生",
-        "playReverseButtonLabel": "逆再生",
-        "playReverseButtonAriaLabel": "録音された音声を逆再生",
-        "playbackSpeedLabel": "再生速度",
-        "playbackSpeedControlLabel": "再生速度の調整"
-    }
+  "en": {
+    "description1": "Record your voice, sounds or any audio and reverse the playback easily.",
+    "privacyNote": "All audio recorded on this page is private and secure and does not leave your device.",
+    "recordButtonLabel": "Record",
+    "recordButtonAriaLabel": "Start recording audio",
+    "recordStopButtonLabel": "Stop Recording",
+    "recordStopButtonAriaLabel": "Stop recording audio",
+    "playButtonLabel": "Play",
+    "playButtonAriaLabel": "Playback recorded audio",
+    "playReverseButtonLabel": "ylaP",
+    "playReverseButtonAriaLabel": "Playback recorded audio in reverse",
+    "playbackSpeedLabel": "Playback Speed",
+    "playbackSpeedControlLabel": "Playback speed control"
+  },
+  "ja": {
+    "description1": "音声やサウンド、任意のオーディオを録音し、簡単に逆再生します。",
+    "privacyNote": "このページで録音されたすべての音声はプライベートで安全です。デバイスを離れることはありません。",
+    "recordButtonLabel": "録音",
+    "recordButtonAriaLabel": "音声の録音を開始",
+    "recordStopButtonLabel": "録音停止",
+    "recordStopButtonAriaLabel": "音声の録音を停止",
+    "playButtonLabel": "再生",
+    "playButtonAriaLabel": "録音された音声を再生",
+    "playReverseButtonLabel": "逆再生",
+    "playReverseButtonAriaLabel": "録音された音声を逆再生",
+    "playbackSpeedLabel": "再生速度",
+    "playbackSpeedControlLabel": "再生速度の調整"
+  },
+  "ko": {
+    "description1": "음성, 소리 또는 모든 오디오를 녹음하고 쉽게 역재생하세요.",
+    "privacyNote": "이 페이지에서 녹음된 모든 오디오는 개인적이고 안전하며, 기기를 떠나지 않습니다.",
+    "recordButtonLabel": "녹음",
+    "recordButtonAriaLabel": "오디오 녹음 시작",
+    "recordStopButtonLabel": "녹음 중지",
+    "recordStopButtonAriaLabel": "오디오 녹음 중지",
+    "playButtonLabel": "재생",
+    "playButtonAriaLabel": "녹음된 오디오 재생",
+    "playReverseButtonLabel": "역재생",
+    "playReverseButtonAriaLabel": "녹음된 오디오를 역재생",
+    "playbackSpeedLabel": "재생 속도",
+    "playbackSpeedControlLabel": "재생 속도 조절"
+  },
+  "zh": {
+    "description1": "录制您的声音、声音或任何音频，轻松反向播放。",
+    "privacyNote": "在此页面录制的所有音频都是私密和安全的，不会离开您的设备。",
+    "recordButtonLabel": "录制",
+    "recordButtonAriaLabel": "开始录制音频",
+    "recordStopButtonLabel": "停止录制",
+    "recordStopButtonAriaLabel": "停止录制音频",
+    "playButtonLabel": "播放",
+    "playButtonAriaLabel": "播放录制的音频",
+    "playReverseButtonLabel": "反向播放",
+    "playReverseButtonAriaLabel": "反向播放录制的音频",
+    "playbackSpeedLabel": "播放速度",
+    "playbackSpeedControlLabel": "播放速度控制"
+  }
 }
