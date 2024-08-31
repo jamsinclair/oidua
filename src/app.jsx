@@ -95,7 +95,7 @@ function Footer () {
       <p>소스 코드: <a href="https://github.com/jamsinclair/oidua">GitHub</a>에서 호스팅</p>
     </footer>
   }  else if (language === 'zh') {
-    <footer>
+    return <footer>
         <p>其他语言？<a href="/">English</a>, <a href="/ja/">日本語</a>, <a href="/ko/">한국어</a></p>
         <p>创建者：<a href="https://github.com/jamsinclair">jamsinclair</a></p>
         <p>源代码托管在 <a href="https://github.com/jamsinclair/oidua">GitHub</a></p>
