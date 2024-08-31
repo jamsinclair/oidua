@@ -90,13 +90,13 @@ function Footer () {
     </footer>
   } else if (language === 'ko') {
     return <footer>
-      <p>다른 언어? <a href="/">English</a>, <a href="/zh/">중국어</a>, <a href="/ja/">일본어</a></p>
+      <p>다른 언어? <a href="/">English</a>, <a href="/zh/">中文</a>, <a href="/ja/">日本語</a></p>
       <p>만든 사람: <a href="https://github.com/jamsinclair">jamsinclair</a></p>
       <p>소스 코드: <a href="https://github.com/jamsinclair/oidua">GitHub</a>에서 호스팅</p>
     </footer>
   }  else if (language === 'zh') {
     <footer>
-        <p>其他语言？<a href="/">English</a>, <a href="/ja/">日文</a>, <a href="/ko/">韩文</a></p>
+        <p>其他语言？<a href="/">English</a>, <a href="/ja/">日本語</a>, <a href="/ko/">한국어</a></p>
         <p>创建者：<a href="https://github.com/jamsinclair">jamsinclair</a></p>
         <p>源代码托管在 <a href="https://github.com/jamsinclair/oidua">GitHub</a></p>
     </footer>
