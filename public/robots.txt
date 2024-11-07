@@ -1,1 +1,1 @@
-Sitemap: https://oidua.vercel.app/sitemap.xml
+Sitemap: https://oidua.netlify.app/sitemap.xml
