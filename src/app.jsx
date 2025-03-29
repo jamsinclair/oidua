@@ -31,31 +31,6 @@ const trimSilence = (samples, threshold = 1e-7) => {
   return samples.subarray(firstAbove > -1 ? firstAbove : 0, lastAbove > -1 ? lastAbove : undefined);
 }
 
-const playSamples = (sampleData, playbackRate = 1, reverse = false, updateSamplesCache) => {
-    initAudioContext();
-    audioContext.resume();
-    const sampleRate = sampleData.sampleRate;
-    let currentSamples = sampleData[String(playbackRate)];
-    if (!currentSamples) {
-      const originalSamples = sampleData['1'];
-      currentSamples = getTimeStretchedSamples(originalSamples, playbackRate, 1, sampleRate);
-      updateSamplesCache({
-        ...sampleData,
-        [String(playbackRate)]: currentSamples
-      })
-    }
-    let audioBuffer = audioContext.createBuffer(1, currentSamples.length, sampleRate);
-    let audio = audioBuffer.getChannelData(0);
-    for (let i = 0; i < currentSamples.length; i++) {
-      const index = reverse ? currentSamples.length - i - 1 : i;
-      audio[i] = currentSamples[index];
-    }
-    let source = audioContext.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
-    source.start();
-}
-
 function RecordButton ({ onRecordStopped }) {
   const [isRecordingQueued, setIsRecordingQueued] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -111,6 +86,7 @@ function Footer () {
 
 export function App() {
   const [sampleData, setSampleData] = useState(null);
+  const [currentPlaybackSource, setCurrentPlaybackSource] = useState(null);
   const [playbackRate, setPlaybackRate] = useState(1);
   const onRecordStopped = async (chunks) => {
     const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
@@ -122,14 +98,47 @@ export function App() {
     if (!sampleData) {
       return;
     }
-    playSamples(sampleData, playbackRate, false, setSampleData);
+    playSample();
   }
 
   const onPlayReversed = () => {
     if (!sampleData) {
       return;
     }
-    playSamples(sampleData, playbackRate, true, setSampleData);
+    playSample(true);
+  }
+
+  const playSample = (reverse = false) => {
+    if (currentPlaybackSource) {
+      currentPlaybackSource.stop();
+      currentPlaybackSource.disconnect();
+      setCurrentPlaybackSource(null);
+    }
+
+    initAudioContext();
+    audioContext.resume();
+    const sampleRate = sampleData.sampleRate;
+    let currentSamples = sampleData[String(playbackRate)];
+    if (!currentSamples) {
+      const originalSamples = sampleData['1'];
+      currentSamples = getTimeStretchedSamples(originalSamples, playbackRate, 1, sampleRate);
+      setSampleData({
+        ...sampleData,
+        [String(playbackRate)]: currentSamples
+      })
+    }
+
+    let audioBuffer = audioContext.createBuffer(1, currentSamples.length, sampleRate);
+    let audio = audioBuffer.getChannelData(0);
+    for (let i = 0; i < currentSamples.length; i++) {
+      const index = reverse ? currentSamples.length - i - 1 : i;
+      audio[i] = currentSamples[index];
+    }
+    let source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(audioContext.destination);
+    source.start();
+    setCurrentPlaybackSource(source);
   }
 
   return (
@@ -141,8 +150,18 @@ export function App() {
       </header>
       <main>
         <RecordButton onRecordStopped={onRecordStopped} />
-        <button className="audio-button" disabled={!sampleData} onClick={onPlay} aria-label={localeStrings.playButtonAriaLabel}>{localeStrings.playButtonLabel}</button>
-        <button className="audio-button" disabled={!sampleData} onClick={onPlayReversed} aria-label={localeStrings.playReverseButtonAriaLabel}>{localeStrings.playReverseButtonLabel}</button>
+        <button className="audio-button"
+          disabled={!sampleData}
+          onClick={onPlay}
+          aria-label={localeStrings.playButtonAriaLabel}>
+            {localeStrings.playButtonLabel}
+        </button>
+        <button className="audio-button"
+          disabled={!sampleData}
+          onClick={onPlayReversed}
+          aria-label={localeStrings.playReverseButtonAriaLabel}>
+            {localeStrings.playReverseButtonLabel}
+        </button>
         <label>
           <span className="playback-rate">{localeStrings.playbackSpeedLabel} {playbackRate}x</span>
           <input
