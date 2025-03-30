@@ -50,7 +50,7 @@ button {
   transition: border-color 0.25s;
   width: 100%;
 }
-button:hover {
+button:hover:not(:disabled) {
   border-color: #646cff;
 }
 button:focus,
@@ -60,6 +60,49 @@ button:focus-visible {
 
 footer {
   font-size: 14px;
+}
+
+.audio-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 2em;
+  overflow: hidden;
+}
+
+.record-indicator {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  background-color: #646cff;
+  animation: flash 1s infinite;
+}
+
+.audio-button.play::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--playback-width-play, 0);
+  background-color: #646cff;
+  opacity: 0.35;
+  transition: width 0.1s;
+}
+
+.audio-button.reverse::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--playback-width-reverse, 0);
+  background-color: #646cff;
+  opacity: 0.35;
+  transition: width 0.1s;
 }
 
 @media (prefers-color-scheme: light) {
@@ -72,5 +115,17 @@ footer {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 }

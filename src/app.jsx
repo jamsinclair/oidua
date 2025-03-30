@@ -6,6 +6,9 @@ import strings from './strings.json';
 
 const language = document.documentElement.lang || 'en';
 
+const PLAYBACK_WIDTH_PLAY_VAR = '--playback-width-play';
+const PLAYBACK_WIDTH_REVERSE_VAR = '--playback-width-reverse';
+
 const localeStrings = strings[language];
 let audioContext = null;
 
@@ -31,7 +34,13 @@ const trimSilence = (samples, threshold = 1e-7) => {
   return samples.subarray(firstAbove > -1 ? firstAbove : 0, lastAbove > -1 ? lastAbove : undefined);
 }
 
-function RecordButton ({ onRecordStopped }) {
+const calculateAudioDuration = (audioBuffer, sampleRate) => {
+  const numberOfSamples = audioBuffer.length;
+  const durationInSeconds = numberOfSamples / sampleRate;
+  return durationInSeconds;
+}
+
+function RecordButton ({ onRecordStart, onRecordStopped }) {
   const [isRecordingQueued, setIsRecordingQueued] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const label = isRecording ? localeStrings.recordStopButtonLabel : localeStrings.recordButtonLabel;
@@ -40,6 +49,7 @@ function RecordButton ({ onRecordStopped }) {
   
   useEffect(() => {
     if (isRecordingQueued && !isRecording) {
+      onRecordStart();
       recordService.start().then(() => setIsRecording(true));
       return;
     }
@@ -53,7 +63,13 @@ function RecordButton ({ onRecordStopped }) {
     }
   }, [isRecording, isRecordingQueued]);
 
-  return <button className="audio-button" aria-label={ariaLabel} disabled={isRecordingQueued && !isRecording || isRecording && !isRecordingQueued} onClick={onClick}>{label}</button>
+  return <button
+    className="audio-button"
+    aria-label={ariaLabel}
+    onClick={onClick}
+    disabled={isRecordingQueued && !isRecording || isRecording && !isRecordingQueued}>
+      { isRecording ? <span className="record-indicator"></span> : null } {label}
+  </button>
 }
 
 function Footer () {
@@ -85,13 +101,16 @@ function Footer () {
 }
 
 export function App() {
+  const [isRecording, setIsRecording] = useState(false);
   const [sampleData, setSampleData] = useState(null);
   const [currentPlaybackSource, setCurrentPlaybackSource] = useState(null);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [startedPlayback, setStartedPlayback] = useState([0, false]);
   const onRecordStopped = async (chunks) => {
     const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
     const { sampleRate, samples } = await getAudioSamples(blob);
     setSampleData({ '1': trimSilence(samples), sampleRate });
+    setIsRecording(false);
   };
 
   const onPlay = () => {
@@ -108,13 +127,22 @@ export function App() {
     playSample(true);
   }
 
-  const playSample = (reverse = false) => {
+  const stopPlayback = () => {
     if (currentPlaybackSource) {
       currentPlaybackSource.stop();
       currentPlaybackSource.disconnect();
       setCurrentPlaybackSource(null);
+      setStartedPlayback([0, false]);
     }
+  }
 
+  const onRecordStart = () => {
+    stopPlayback();
+    setIsRecording(true);
+  }
+
+  const playSample = (reverse = false) => {
+    stopPlayback();
     initAudioContext();
     audioContext.resume();
     const sampleRate = sampleData.sampleRate;
@@ -139,7 +167,49 @@ export function App() {
     source.connect(audioContext.destination);
     source.start();
     setCurrentPlaybackSource(source);
+    setStartedPlayback([Date.now(), reverse]);
   }
+
+  useEffect(() => {
+    const [startTime, isReverse] = startedPlayback;
+
+    if (startTime < 1) {
+      return;
+    }
+    const targetProperty = isReverse ? PLAYBACK_WIDTH_REVERSE_VAR : PLAYBACK_WIDTH_PLAY_VAR;
+    const duration = calculateAudioDuration(sampleData[String(playbackRate)], sampleData.sampleRate) * 1000;
+
+    if (startTime + duration < Date.now()) {
+      return;
+    }
+
+    document.documentElement.style.setProperty(PLAYBACK_WIDTH_PLAY_VAR, '0.01%');
+    document.documentElement.style.setProperty(PLAYBACK_WIDTH_REVERSE_VAR, '0.01%');
+    let currentRafId = null;
+
+    const updatePlaybackWidth = () => {
+      const currentTime = Date.now();
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      document.documentElement.style.setProperty(targetProperty, `${progress * 100}%`);
+      if (progress < 1) {
+        currentRafId = requestAnimationFrame(updatePlaybackWidth);
+      } else {
+        setStartedPlayback([0, false]);
+        currentRafId = null;
+      }
+    }
+
+    updatePlaybackWidth();
+
+    return () => {
+      if (currentRafId) {
+        cancelAnimationFrame(currentRafId);
+        currentRafId = null;
+      }
+      document.documentElement.style.setProperty(PLAYBACK_WIDTH_PLAY_VAR, '0.01%');
+      document.documentElement.style.setProperty(PLAYBACK_WIDTH_REVERSE_VAR, '0.01%');
+    }
+  }, [startedPlayback]);
 
   return (
     <>
@@ -149,15 +219,15 @@ export function App() {
         <p>{localeStrings.privacyNote}</p>
       </header>
       <main>
-        <RecordButton onRecordStopped={onRecordStopped} />
-        <button className="audio-button"
-          disabled={!sampleData}
+        <RecordButton onRecordStart={onRecordStart} onRecordStopped={onRecordStopped} />
+        <button className="audio-button play"
+          disabled={!sampleData || isRecording}
           onClick={onPlay}
           aria-label={localeStrings.playButtonAriaLabel}>
             {localeStrings.playButtonLabel}
         </button>
-        <button className="audio-button"
-          disabled={!sampleData}
+        <button className="audio-button reverse"
+          disabled={!sampleData || isRecording}
           onClick={onPlayReversed}
           aria-label={localeStrings.playReverseButtonAriaLabel}>
             {localeStrings.playReverseButtonLabel}
@@ -172,7 +242,6 @@ export function App() {
             min="0.5"
             max="1.5"
             step="0.1"
-            className="audio-button"
             disabled={!sampleData}
             aria-label={localeStrings.playbackSpeedControlLabel}
             aria-valuemin="0.5"
