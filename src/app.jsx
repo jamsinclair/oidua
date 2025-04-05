@@ -75,26 +75,32 @@ function RecordButton ({ onRecordStart, onRecordStopped }) {
 function Footer () {
   if (language === 'ja') {
     return <footer>
-      <p>Other languages? <a href="/">English</a>, <a href="/zh/">中文</a>, <a href="/ko/">한국어</a></p>
+      <p>Other languages? <a href="/">English</a>, <a href="/zh/">中文</a>, <a href="/ko/">한국어</a>, <a href="/es/">Español</a></p>
       <p>作成者: <a href="https://github.com/jamsinclair">jamsinclair</a></p>
       <p>ソースコードは<a href="https://github.com/jamsinclair/oidua">GitHub</a>にホストされています</p>
     </footer>
   } else if (language === 'ko') {
     return <footer>
-      <p>다른 언어? <a href="/">English</a>, <a href="/zh/">中文</a>, <a href="/ja/">日本語</a></p>
+      <p>다른 언어? <a href="/">English</a>, <a href="/zh/">中文</a>, <a href="/ja/">日本語</a>, <a href="/es/">Español</a></p>
       <p>만든 사람: <a href="https://github.com/jamsinclair">jamsinclair</a></p>
       <p>소스 코드: <a href="https://github.com/jamsinclair/oidua">GitHub</a>에서 호스팅</p>
     </footer>
   }  else if (language === 'zh') {
     return <footer>
-        <p>其他语言？<a href="/">English</a>, <a href="/ja/">日本語</a>, <a href="/ko/">한국어</a></p>
+        <p>其他语言？<a href="/">English</a>, <a href="/ja/">日本語</a>, <a href="/ko/">한국어</a>, <a href="/es/">Español</a></p>
         <p>创建者：<a href="https://github.com/jamsinclair">jamsinclair</a></p>
         <p>源代码托管在 <a href="https://github.com/jamsinclair/oidua">GitHub</a></p>
+    </footer>
+  } else if (language === 'es') {
+    return <footer>
+      <p>¿Otros idiomas? <a href="/">English</a>, <a href="/zh/">中文</a>, <a href="/ja/">日本語</a>, <a href="/ko/">한국어</a></p>
+      <p>Creado por <a href="https://github.com/jamsinclair">jamsinclair</a></p>
+      <p>Código fuente alojado en <a href="https://github.com/jamsinclair/oidua">GitHub</a></p>
     </footer>
   }
 
   return <footer>
-    <p>Other languages? <a href="/zh/">中文</a>, <a href="/ja/">日本語</a>, <a href="/ko/">한국어</a></p>
+    <p>Other languages? <a href="/zh/">中文</a>, <a href="/ja/">日本語</a>, <a href="/ko/">한국어</a>, <a href="/es/">Español</a></p>
     <p>Created by <a href="https://github.com/jamsinclair">jamsinclair</a></p>
     <p>Source code hosted on <a href="https://github.com/jamsinclair/oidua">GitHub</a></p>
   </footer>

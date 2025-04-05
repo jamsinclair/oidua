@@ -12,6 +12,7 @@ export default defineConfig({
         ja: resolve(__dirname, 'ja/index.html'),
         ko: resolve(__dirname, 'ko/index.html'),
         zh: resolve(__dirname, 'zh/index.html'),
+        es: resolve(__dirname, 'es/index.html'),
       },
     },
   },

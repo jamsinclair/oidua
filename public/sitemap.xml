@@ -24,4 +24,10 @@
     <priority>1.0</priority>
     <changefreq>monthly</changefreq>
   </url>
+  <url>
+    <loc>https://oidua.netlify.app/es/</loc>
+    <lastmod>2024-08-31</lastmod>
+    <priority>1.0</priority>
+    <changefreq>monthly</changefreq>
+  </url>
 </urlset>

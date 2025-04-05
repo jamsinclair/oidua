@@ -54,5 +54,19 @@
     "playReverseButtonAriaLabel": "反向播放录制的音频",
     "playbackSpeedLabel": "播放速度",
     "playbackSpeedControlLabel": "播放速度控制"
+  },
+  "es": {
+    "description1": "Graba tu voz, sonidos o cualquier audio y reproduce al revés fácilmente.",
+    "privacyNote": "Todo el audio grabado en esta página es privado y seguro y no sale de tu dispositivo.",
+    "recordButtonLabel": "Grabar",
+    "recordButtonAriaLabel": "Comenzar a grabar audio",
+    "recordStopButtonLabel": "Detener Grabación",
+    "recordStopButtonAriaLabel": "Detener la grabación de audio",
+    "playButtonLabel": "Reproducir",
+    "playButtonAriaLabel": "Reproducir audio grabado",
+    "playReverseButtonLabel": "Reproducir al Revés",
+    "playReverseButtonAriaLabel": "Reproducir audio grabado al revés",
+    "playbackSpeedLabel": "Velocidad de Reproducción",
+    "playbackSpeedControlLabel": "Control de velocidad de reproducción"
   }
 }
