@@ -123,11 +123,19 @@ export function App() {
     if (!sampleData) {
       return;
     }
+    if (currentPlaybackSource && !startedPlayback[1]) {
+      stopPlayback();
+      return;
+    }
     playSample();
   }
 
   const onPlayReversed = () => {
     if (!sampleData) {
+      return;
+    }
+    if (currentPlaybackSource && startedPlayback[1]) {
+      stopPlayback();
       return;
     }
     playSample(true);
