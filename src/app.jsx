@@ -216,6 +216,7 @@ export function App() {
 
   const stopPlayback = () => {
     if (currentPlaybackSource) {
+      currentPlaybackSource.onended = null;
       currentPlaybackSource.stop();
       currentPlaybackSource.disconnect();
       setCurrentPlaybackSource(null);
@@ -235,7 +236,6 @@ export function App() {
     const { samples: currentSamples, sampleRate } = getCurrentSamples(reverse);
 
     if (!currentSamples) {
-      // Samples are not available, or an issue occurred
       return;
     }
 
@@ -247,6 +247,17 @@ export function App() {
     let source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
+
+    source.onended = () => {
+      setCurrentPlaybackSource(prevCurrentSource => {
+        if (prevCurrentSource === source) {
+          setStartedPlayback([0, false]);
+          return null;
+        }
+        return prevCurrentSource;
+      });
+    };
+
     source.start();
     setCurrentPlaybackSource(source);
     setStartedPlayback([Date.now(), reverse]);
