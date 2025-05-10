@@ -10,6 +10,10 @@
     "playButtonAriaLabel": "Playback recorded audio",
     "playReverseButtonLabel": "ylaP",
     "playReverseButtonAriaLabel": "Playback recorded audio in reverse",
+    "downloadButtonLabel": "Download",
+    "downloadingButtonLabel": "Downloading...",
+    "downloadButtonAriaLabel": "Download reversed audio",
+    "downloadFilenameReversedPrefix": "reversed_audio",
     "playbackSpeedLabel": "Playback Speed",
     "playbackSpeedControlLabel": "Playback speed control"
   },
@@ -24,6 +28,10 @@
     "playButtonAriaLabel": "録音された音声を再生",
     "playReverseButtonLabel": "逆再生",
     "playReverseButtonAriaLabel": "録音された音声を逆再生",
+    "downloadButtonLabel": "ダウンロード",
+    "downloadingButtonLabel": "ダウンロード中...",
+    "downloadButtonAriaLabel": "逆再生された音声をダウンロード",
+    "downloadFilenameReversedPrefix": "逆再生音声",
     "playbackSpeedLabel": "再生速度",
     "playbackSpeedControlLabel": "再生速度の調整"
   },
@@ -38,6 +46,10 @@
     "playButtonAriaLabel": "녹음된 오디오 재생",
     "playReverseButtonLabel": "역재생",
     "playReverseButtonAriaLabel": "녹음된 오디오를 역재생",
+    "downloadButtonLabel": "다운로드",
+    "downloadingButtonLabel": "다운로드 중...",
+    "downloadButtonAriaLabel": "반전된 오디오 다운로드",
+    "downloadFilenameReversedPrefix": "반전된_오디오",
     "playbackSpeedLabel": "재생 속도",
     "playbackSpeedControlLabel": "재생 속도 조절"
   },
@@ -52,6 +64,10 @@
     "playButtonAriaLabel": "播放录制的音频",
     "playReverseButtonLabel": "反向播放",
     "playReverseButtonAriaLabel": "反向播放录制的音频",
+    "downloadButtonLabel": "下载",
+    "downloadingButtonLabel": "下载中...",
+    "downloadButtonAriaLabel": "下载反转的音频",
+    "downloadFilenameReversedPrefix": "反转音频",
     "playbackSpeedLabel": "播放速度",
     "playbackSpeedControlLabel": "播放速度控制"
   },
@@ -66,6 +82,10 @@
     "playButtonAriaLabel": "Reproducir audio grabado",
     "playReverseButtonLabel": "Reproducir al Revés",
     "playReverseButtonAriaLabel": "Reproducir audio grabado al revés",
+    "downloadButtonLabel": "Descargar",
+    "downloadingButtonLabel": "Descargando...",
+    "downloadButtonAriaLabel": "Descargar audio invertido",
+    "downloadFilenameReversedPrefix": "audio_invertido",
     "playbackSpeedLabel": "Velocidad de Reproducción",
     "playbackSpeedControlLabel": "Control de velocidad de reproducción"
   }

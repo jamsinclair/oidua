@@ -10,8 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "kali": "git+ssh://git@github.com:infinity/kali.git#0.0.1",
     "preact": "^10.26.4",
-    "kali": "git+ssh://git@github.com:infinity/kali.git#0.0.1"
+    "wasm-media-encoders": "0.7.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.1",

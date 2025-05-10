@@ -112,6 +112,36 @@ export function App() {
   const [currentPlaybackSource, setCurrentPlaybackSource] = useState(null);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [startedPlayback, setStartedPlayback] = useState([0, false]);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const getCurrentSamples = (reverse = false) => {
+    if (!sampleData) {
+      return { samples: null, sampleRate: null };
+    }
+
+    const sampleRate = sampleData.sampleRate;
+    let currentSamples = sampleData[String(playbackRate)];
+
+    if (!currentSamples) {
+      const originalSamples = sampleData['1'];
+      currentSamples = getTimeStretchedSamples(originalSamples, playbackRate, 1, sampleRate);
+      setSampleData(prevData => ({
+        ...prevData,
+        [String(playbackRate)]: currentSamples
+      }));
+    }
+
+    if (reverse) {
+      const reversedSamplesArray = new Float32Array(currentSamples.length);
+      for (let i = 0; i < currentSamples.length; i++) {
+        reversedSamplesArray[i] = currentSamples[currentSamples.length - 1 - i];
+      }
+      return { samples: reversedSamplesArray, sampleRate };
+    }
+
+    return { samples: currentSamples, sampleRate };
+  };
+
   const onRecordStopped = async (chunks) => {
     const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
     const { sampleRate, samples } = await getAudioSamples(blob);
@@ -141,6 +171,49 @@ export function App() {
     playSample(true);
   }
 
+  const onDownloadReversed = async () => {
+    if (!sampleData || isDownloading) {
+      return;
+    }
+    setIsDownloading(true);
+    try {
+      const { encodeToMp3 } = await import('./encode.js');
+      const { samples: reversedSamples, sampleRate } = getCurrentSamples(true);
+
+      if (!reversedSamples) {
+        // Handle case where samples couldn't be retrieved, though getCurrentSamples should ideally prevent this
+        console.error("Failed to get samples for download.");
+        setIsDownloading(false);
+        return;
+      }
+
+      const mp3Data = await encodeToMp3({ samples: [reversedSamples], sampleRate });
+      const blob = new Blob([mp3Data], { type: 'audio/mpeg' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const timestamp = `${year}-${month}-${day}_${hours}_${minutes}_${seconds}`;
+      const filenamePrefix = localeStrings.downloadFilenameReversedPrefix || 'reversed_audio';
+      a.download = `${filenamePrefix}_${timestamp}.mp3`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error during MP3 encoding or download:", error);
+      // Optionally, provide user feedback about the error
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const stopPlayback = () => {
     if (currentPlaybackSource) {
       currentPlaybackSource.stop();
@@ -159,22 +232,17 @@ export function App() {
     stopPlayback();
     initAudioContext();
     audioContext.resume();
-    const sampleRate = sampleData.sampleRate;
-    let currentSamples = sampleData[String(playbackRate)];
+    const { samples: currentSamples, sampleRate } = getCurrentSamples(reverse);
+
     if (!currentSamples) {
-      const originalSamples = sampleData['1'];
-      currentSamples = getTimeStretchedSamples(originalSamples, playbackRate, 1, sampleRate);
-      setSampleData({
-        ...sampleData,
-        [String(playbackRate)]: currentSamples
-      })
+      // Samples are not available, or an issue occurred
+      return;
     }
 
     let audioBuffer = audioContext.createBuffer(1, currentSamples.length, sampleRate);
     let audio = audioBuffer.getChannelData(0);
     for (let i = 0; i < currentSamples.length; i++) {
-      const index = reverse ? currentSamples.length - i - 1 : i;
-      audio[i] = currentSamples[index];
+      audio[i] = currentSamples[i];
     }
     let source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
@@ -245,6 +313,12 @@ export function App() {
           onClick={onPlayReversed}
           aria-label={localeStrings.playReverseButtonAriaLabel}>
             {localeStrings.playReverseButtonLabel}
+        </button>
+        <button className="audio-button download"
+          disabled={!sampleData || isRecording || isDownloading}
+          onClick={onDownloadReversed}
+          aria-label={localeStrings.downloadButtonAriaLabel || 'Download reversed audio'}>
+            {isDownloading ? (localeStrings.downloadingButtonLabel || 'Downloading...') : (localeStrings.downloadButtonLabel || 'Download')}
         </button>
         <label>
           <span className="playback-rate">{localeStrings.playbackSpeedLabel} {playbackRate}x</span>
